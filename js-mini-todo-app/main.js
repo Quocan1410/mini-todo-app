@@ -4,6 +4,11 @@ const taskList = document.querySelector("#task-list");
 const todoForm = document.querySelector(".todo-form");
 const todoInput = document.querySelector("#todo-input");
 
+function isDuplicateTask(newTitle, excludeIndex = -1) {
+    const isDuplicate = tasks.some((task, index) => task.title.toLowerCase() === newTitle.toLowerCase() && index !== excludeIndex);
+    return isDuplicate;
+}
+
 function handleTaskActions(e) {
     const taskItem = e.target.closest(".task-item");
     const taskIndex = +taskItem.getAttribute("task-index");
@@ -21,9 +26,9 @@ function handleTaskActions(e) {
             return;
         }
 
-        const isDuplicate = tasks.some((task, index) => task.title.toLowerCase() === newTitle.toLowerCase() && index !== taskIndex);
+        // const isDuplicate = tasks.some((task, index) => task.title.toLowerCase() === newTitle.toLowerCase() && index !== taskIndex);
 
-        if (isDuplicate) {
+        if (isDuplicateTask(newTitle, taskIndex)) {
             alert("This task already exists!");
             return;
         }
@@ -56,9 +61,9 @@ function addTask(e) {
 
     if (!value) return alert("Please enter a task!");
 
-    const isDuplicate = tasks.some((task) => task.title.toLowerCase() === value.toLowerCase());
+    // const isDuplicate = tasks.some((task) => task.title.toLowerCase() === value.toLowerCase());
 
-    if (isDuplicate) {
+    if (isDuplicateTask(value)) {
         alert("This task already exists!");
         return;
     }

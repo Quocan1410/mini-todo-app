@@ -12,6 +12,11 @@ Bộ nhớ tầm: 5-10MB
 */
 
 // JSON
+function escapeHtml(html) {
+    const div = document.createElement("div");
+    div.textContent = html;
+    return div.innerHTML;
+}
 
 function isDuplicateTask(newTitle, excludeIndex = -1) {
     const isDuplicate = tasks.some((task, index) => task.title.toLowerCase() === newTitle.toLowerCase() && index !== excludeIndex);
@@ -24,7 +29,10 @@ function saveTasks() {
 
 function handleTaskActions(e) {
     const taskItem = e.target.closest(".task-item");
-    const taskIndex = +taskItem.getAttribute("task-index");
+    if (!taskItem) return;
+
+    // const taskIndex = +taskItem.getAttribute("data-index");
+    const taskIndex = +taskItem.dataset.index;
     const task = tasks[taskIndex];
 
     if (e.target.closest(".edit")) {
@@ -103,8 +111,8 @@ function renderTasks() {
     const html = tasks
         .map(
             (task, index) => `
-    <li class="task-item ${task.completed ? "completed" : ""}" task-index="${index}">
-        <span class="task-title">${task.title}</span>
+    <li class="task-item ${task.completed ? "completed" : ""}" data-index="${index}">
+        <span class="task-title">${escapeHtml(task.title)}</span>
         <div class="task-action">
             <button class="task-btn edit">Edit</button>
             <button class="task-btn done">${task.completed ? "Mark as undone" : "Mark as done"}</button>

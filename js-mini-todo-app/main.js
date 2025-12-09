@@ -1,12 +1,25 @@
-const tasks = [];
+const tasks = JSON.parse(localStorage.getItem("tasks")) ?? [];
 
 const taskList = document.querySelector("#task-list");
 const todoForm = document.querySelector(".todo-form");
 const todoInput = document.querySelector("#todo-input");
 
+/* localStorage: 
+Tính năng của trình duyệt cho phép lưu trữ dữ liệu 
+chuỗi vào trong bộ nhớ của trình duyệt.
+
+Bộ nhớ tầm: 5-10MB   
+*/
+
+// JSON
+
 function isDuplicateTask(newTitle, excludeIndex = -1) {
     const isDuplicate = tasks.some((task, index) => task.title.toLowerCase() === newTitle.toLowerCase() && index !== excludeIndex);
     return isDuplicate;
+}
+
+function saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
 function handleTaskActions(e) {
@@ -35,12 +48,14 @@ function handleTaskActions(e) {
 
         task.title = newTitle;
         renderTasks();
+        saveTasks();
         return;
     }
 
     if (e.target.closest(".done")) {
         task.completed = !task.completed;
         renderTasks();
+        saveTasks();
         return;
     }
 
@@ -48,12 +63,12 @@ function handleTaskActions(e) {
         if (confirm(`Are you sure you want to delete this "${task.title}"?`)) {
             tasks.splice(taskIndex, 1);
             renderTasks();
+            saveTasks();
         }
     }
 }
 
 // No tasks available
-
 function addTask(e) {
     e.preventDefault();
 
@@ -74,6 +89,7 @@ function addTask(e) {
     });
 
     renderTasks();
+    saveTasks();
 
     todoInput.value = "";
 }
